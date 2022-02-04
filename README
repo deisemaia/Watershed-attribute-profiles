@@ -1,0 +1,162 @@
+-----------
+Description
+-----------
+
+This repository holds the source codes that reproduce the experimental results of 
+
+[1] Santana Maia, D., Pham M.T., Lefèvre, S. Watershed-based attribute profiles for pixelclassification and building extraction of remotesensing data.
+
+Experiments were performed using the open-source Simple Attribute Profile (SAP) (https://gitlab.inria.fr/fguiotte/sap)
+and Higra (https://github.com/higra/) libraries.
+
+------------
+Requirements
+------------
+
+- Python 3.7
+- Numpy
+- Matplotlib
+- Higra
+- Scikit-learn
+- Sap
+- PIL
+- Scipy
+- Tifffile
+- Scikit-image
+
+________________________________________________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------------------------------------------
+Experiments with the Zurich dataset
+________________________________________________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------------------------------------------
+
+In order to reproduce the experimental results with the Zurich dataset, the Zurich_dataset_v1.0.zip file should be
+downloaded from https://sites.google.com/site/michelevolpiresearch/data/zurich-dataset?authuser=0
+
+Once the file Zurich_dataset_v1.0.zip is downloaded and decompressed in a given directory $PATH_TO_ZURICH, set the variable 
+DATA_DIR (line 29 of zurich_attribute_profiles.py) to $PATH_TO_ZURICH.
+
+Then, set the OUT_DIR variable (line 30 of zurich_attribute_profiles.py) as the directory where the resulting classification results
+will be saved.
+
+By default, evalution results are computed as the mean of ten iterations. To perform a different number of iterations, change the value
+of the variable 'nb_iter' (line 138 of zurich_attribute_profiles.py).
+
+Finally, the following command line can be executed in order to compute and evaluate attribute profiles in the context of pixel classification
+on the Zurich dataset :  
+    
+	python zurich_attribute_profiles.py [method] [connectivity] [watershed_attribute] [markers]
+
+    	[method] = GRAY, AP, MAX, MIN, SDAP, ALPHA, OMEGA, WATERSHED
+
+    	[connectivity] = 4, 8
+ 
+      [watershed_attribute] = area, dynamics, volume, parents (only necessary when method='WATERSHED')
+      
+      [markers] = if markers='WITH_MARKERS' and that method='WATERSHED', the hierarchical watershed is computed with
+                  prior knowledge from training pixels, as described in [1]. Otherwise, this parameter is ignored.
+                     
+
+The evaluation scores are displayed in the following order:
+
+>> Results per image
+>> Image 16: 
+      Overall accuracy (OA), Average accuracy per class (AA) and kappa coefficient (Kappa)
+      Accuracy per class in the following order : Roads, Buildings, Trees, Grass, Bare Soil, Water, Railways, Swimming Pools
+>> Image 17:
+    ...
+    
+>> Final results (average OA, AA and Kappa over all test images)
+>> Accuracy per class (averaged over all test images, the results per class are presented same order as for the results per image)
+>> Precision per class (idem)
+>> Recall per class (idem)
+>> F1 score per class (idem)
+>> Mean F1 score
+  
+Each score is shown as "mean +- std", where 'mean' and 'std' are the mean and standard deviation of the scores accross the ten iterations.
+Negative values in the accuracy results per image indicate that a given image does not contain any sample of the corresponding semantic class.
+
+________________________________________________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------------------------------------------
+Experiments with the Vaihingen dataset
+________________________________________________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------------------------------------------
+
+In order to reproduce the experimental results with the Vaihingen dataset, this dataset should be
+downloaded from https://www2.isprs.org/commissions/comm2/wg4/benchmark/2d-sem-label-vaihingen/
+
+After downloading the dataset, be sure that you have the folder "ISPRS_semantic_labeling_Vaihingen", which, in its turn,
+contain the folders "top", "gts_for_participants" and "dsm".
+
+Set the variable DATA_DIR (line 27 of vaihingen_attribute_profiles.py) to $PATH_TO_VAIHINGEN, which should contain the folder 
+"ISPRS_semantic_labeling_Vaihingen".
+
+Then, set the OUT_DIR variable (line 28 of vaihingen_attribute_profiles.py) as the directory where the resulting classification results
+will be saved.
+
+By default, evalution results are computed as the mean of ten iterations. To perform a different number of iterations, change the value
+of the variable 'nb_iter' (line 141 of vaihingen_attribute_profiles.py).
+
+Finally, the following command line can be executed in order to compute and evaluate attribute profiles in the context of pixel classification
+on the Vaihingen dataset :  
+    
+	python vaihingen_attribute_profiles.py [method] [connectivity] [watershed_attribute] [markers]
+
+    	[method] = GRAY, AP, MAX, MIN, SDAP, ALPHA, OMEGA, WATERSHED
+
+    	[connectivity] = 4, 8
+ 
+      [watershed_attribute] = area, dynamics, volume, parents (only necessary when method='WATERSHED')
+      
+      [markers] = if markers='WITH_MARKERS' and that method='WATERSHED', the hierarchical watershed is computed with
+                  prior knowledge from training pixels, as described in [1]. Otherwise, this parameter is ignored.
+                     
+
+The evaluation scores are displayed in the following order:
+
+>> Results per image
+>> Image 11: 
+      Overall accuracy (OA), Average accuracy per class (AA) and kappa coefficient (Kappa)
+      Accuracy per class in the following order : Background, Buildings
+>> Image 15:
+    ...
+    
+>> Final results (average OA, AA and Kappa over all test images)
+>> Accuracy per class (averaged over all test images, the results per class are presented same order as for the results per image)
+>> Mean Intersection over Union - IoU (idem)
+>> Precision per class (idem)
+>> Recall per class (idem)
+>> F1 score per class (idem)
+  
+Each score is shown as "mean +- std", where 'mean' and 'std' are the mean and standard deviation of the scores accross the ten iterations.
+
+
+________________________________________________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------------------------------------------
+Both datasets: classification results per image
+________________________________________________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------------------------------------------
+
+If no prior knowlegde is used, the classification results for each test image is saved in 
+
+     OUT_DIR/result_[method]_[connectivity]_[watershed_attribute]_[image_id]_[iteration].png 
+
+where [method] and [connectivity] are the parameters given as input, [watershed_attribute] is the criteria used to compute hierarchical watersheds
+(if this is the case), [image_id] corresponds to one the test image IDS, and [iteration] indicates the which iteration outputed this result. Otherwise, if markers='WITH_MARKERS', then the test image is save in
+
+    OUT_DIR/result_[method]_[connectivity]_[watershed_attribute]_with_markers_[image_id]_[iteration].png
+    
+________________________________________________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------------------------------------------  
+Both dataset: markers from prior-knowledge
+________________________________________________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------------------------------------------
+
+If prior-knowledge was considered during the construction of hierarchical watersheds, then the probability map obtained from the training pixels
+(defined as \mu in [1]) is saved in the file :
+
+    OUT_DIR/markers_[image_id]_window_[window_size].png
+    
+where [window_size] corresponds to the value of the 'window_size' variable (line 288 of zurich_attribute_profiles.py, line 157 of vaihingen_attribute_profiles.py). 
+In this image, the darkers pixels have the highest probability of belongin to a given semantic class.
+By default, window_size=5, which means that the training features (used to compute the markers) are extracted from a 5x5 window around each pixel.    
