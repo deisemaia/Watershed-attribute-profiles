@@ -4,7 +4,7 @@ Description
 
 This repository holds the source codes that reproduce the experimental results of 
 
-[1] Santana Maia, D., Pham M.T., Lefèvre, S. Watershed-based attribute profiles for pixelclassification and building extraction of remotesensing data.
+[1] Santana Maia, D., Pham M.T., LefÃ¨vre, S. Watershed-based attribute profiles with semanticprior knowledge for remote sensing image analysis.
 
 Experiments were performed using the open-source Simple Attribute Profile (SAP) (https://gitlab.inria.fr/fguiotte/sap)
 and Higra (https://github.com/higra/) libraries.
