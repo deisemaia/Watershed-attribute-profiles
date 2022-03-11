@@ -4,9 +4,9 @@ Description
 
 This repository holds the source codes that reproduce the experimental results of 
 
-[1] Santana Maia, D., Pham M.T., LefÃ¨vre, S. Watershed-based attribute profiles with semantic prior knowledge for remote sensing image analysis.
+[1] Santana Maia, D., Pham M.T., Lefèvre, S. Watershed-based attribute profiles with semantic prior knowledge for remote sensing image analysis
 
-Experiments were performed using the open-source Simple Attribute Profile (SAP) (https://gitlab.inria.fr/fguiotte/sap)
+Experiments were performed using the open-source Simple Attribute Profile (SAP) (https://github.com/fguiotte/sap)
 and Higra (https://github.com/higra/) libraries.
 
 ------------
@@ -39,22 +39,21 @@ DATA_DIR (line 29 of zurich_attribute_profiles.py) to $PATH_TO_ZURICH.
 Then, set the OUT_DIR variable (line 30 of zurich_attribute_profiles.py) as the directory where the resulting classification results
 will be saved.
 
-By default, evalution results are computed as the mean of ten iterations. To perform a different number of iterations, change the value
-of the variable 'nb_iter' (line 138 of zurich_attribute_profiles.py).
+By default, evalution results are computed from a single iteration. To perform a different number of iterations, change the value
+of the variable 'nb_iter' (line 27 of zurich_attribute_profiles.py).
 
-Finally, the following command line can be executed in order to compute and evaluate attribute profiles in the context of pixel classification
-on the Zurich dataset :  
+Finally, the following command line can be executed in order to compute and evaluate attribute profiles in the context of land-cover pixel classification
+and building extraction on the Zurich dataset :  
     
-	python zurich_attribute_profiles.py [method] [connectivity] [watershed_attribute] [markers]
+	python zurich_attribute_profiles.py [task] [method] [connectivity] [watershed_attribute]
 
-    	[method] = GRAY, AP, MAX, MIN, SDAP, ALPHA, OMEGA, WATERSHED
+            [task] = land_cover, building_extraction
 
-    	[connectivity] = 4, 8
+    	    [method] = NIR+RGB, AP, MAX, MIN, SDAP, ALPHA, OMEGA, WATERSHED, WATERSHED_COMPUTED_WITH_PK, WATERSHED_FILTERED_WITH_PK
+
+    	    [connectivity] = 4, 8
  
-      [watershed_attribute] = area, dynamics, volume, parents (only necessary when method='WATERSHED')
-      
-      [markers] = if markers='WITH_MARKERS' and that method='WATERSHED', the hierarchical watershed is computed with
-                  prior knowledge from training pixels, as described in [1]. Otherwise, this parameter is ignored.
+            [watershed_attribute] = area, dynamics, volume (only necessary when method='WATERSHED...')
                      
 
 The evaluation scores are displayed in the following order:
@@ -72,9 +71,11 @@ The evaluation scores are displayed in the following order:
 >> Recall per class (idem)
 >> F1 score per class (idem)
 >> Mean F1 score
+
+If task = building_extraction, then the Mean Intersection Over Union (Mean IOU) is given as well. 
   
 Each score is shown as "mean +- std", where 'mean' and 'std' are the mean and standard deviation of the scores accross the ten iterations.
-Negative values in the accuracy results per image indicate that a given image does not contain any sample of the corresponding semantic class.
+Negative or 'nan' values in the accuracy results per image indicate that a given image does not contain any sample of the corresponding semantic class.
 
 ________________________________________________________________________________________________________________________________________
 ----------------------------------------------------------------------------------------------------------------------------------------
@@ -91,25 +92,24 @@ contain the folders "top", "gts_for_participants" and "dsm".
 Set the variable DATA_DIR (line 27 of vaihingen_attribute_profiles.py) to $PATH_TO_VAIHINGEN, which should contain the folder 
 "ISPRS_semantic_labeling_Vaihingen".
 
-Then, set the OUT_DIR variable (line 28 of vaihingen_attribute_profiles.py) as the directory where the resulting classification results
+Then, set the OUT_DIR variable (line 30 of vaihingen_attribute_profiles.py) as the directory where the resulting classification results
 will be saved.
 
-By default, evalution results are computed as the mean of ten iterations. To perform a different number of iterations, change the value
-of the variable 'nb_iter' (line 141 of vaihingen_attribute_profiles.py).
+By default, evalution results are computed from a single iteration. To perform a different number of iterations, change the value
+of the variable 'nb_iter' (line 27 of vaihingen_attribute_profiles.py).
 
-Finally, the following command line can be executed in order to compute and evaluate attribute profiles in the context of pixel classification
-on the Vaihingen dataset :  
+Finally, the following command line, which is the same for the Zurich dataset can be executed in order to compute and evaluate attribute 
+profiles in the context of pixel classification on the Vaihingen dataset :  
     
-	python vaihingen_attribute_profiles.py [method] [connectivity] [watershed_attribute] [markers]
+	python vaihingen_attribute_profiles.py [task] [method] [connectivity] [watershed_attribute]
 
-    	[method] = GRAY, AP, MAX, MIN, SDAP, ALPHA, OMEGA, WATERSHED
+            [task] = land_cover, building_extraction
 
-    	[connectivity] = 4, 8
+    	    [method] = NIR+RGB, AP, MAX, MIN, SDAP, ALPHA, OMEGA, WATERSHED, WATERSHED_COMPUTED_WITH_PK, WATERSHED_FILTERED_WITH_PK
+
+    	    [connectivity] = 4, 8
  
-      [watershed_attribute] = area, dynamics, volume, parents (only necessary when method='WATERSHED')
-      
-      [markers] = if markers='WITH_MARKERS' and that method='WATERSHED', the hierarchical watershed is computed with
-                  prior knowledge from training pixels, as described in [1]. Otherwise, this parameter is ignored.
+            [watershed_attribute] = area, dynamics, volume (only necessary when method='WATERSHED...')
                      
 
 The evaluation scores are displayed in the following order:

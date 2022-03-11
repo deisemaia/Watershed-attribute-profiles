@@ -15,7 +15,7 @@ def classificationEvaluation(label_gtr, label_classif, number_classes):
     #nb_class = np.amax(label_gtr)
     #nb_class = 8  # Zurich
     #nb_class = 5  # Vaihingen
-    nb_class = number_classes
+    nb_class = number_classes    
     
     ConfMat = np.zeros((nb_class,nb_class))
     
@@ -42,7 +42,9 @@ def classificationEvaluation(label_gtr, label_classif, number_classes):
     #aca = np.mean(perclass_CA)
     classes = np.unique(label_gtr)
     #aca = np.sum(perclass_CA)/classes.shape[0]
-    aca = aca/classes.shape[0]    
-    
+    aca = aca/classes.shape[0]  # Actually, this ACA only makes sense when the ground truth labels contain  
+                                # samples of all classes. When we compute it for a single image that does not
+                                # contain one or more classes, then we can consider only the accuracy per class, but
+                                # the average does not make sense.
     
     return oca,kappa,perclass_CA,aca,ConfMat
